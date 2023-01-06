@@ -25,12 +25,17 @@
           <tr>
             <th class="text-left">Name</th>
             <th class="text-left">Calories</th>
+            <th class="text-left">Aksi</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in desserts" :key="item.name">
             <td>{{ item.name }}</td>
             <td>{{ item.calories }}</td>
+            <td>
+              <v-btn color="green" class="me-3">Details</v-btn
+              ><v-btn color="red">Delete</v-btn>
+            </td>
           </tr>
         </tbody>
       </template>
@@ -43,6 +48,7 @@ export default {
   layout: "default",
   data() {
     return {
+      items: [],
       desserts: [
         {
           name: "Frozen Yogurt",
