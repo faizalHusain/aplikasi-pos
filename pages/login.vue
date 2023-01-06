@@ -44,8 +44,7 @@ export default {
           username: response.data.user.username,
           fullname: response.data.user.fullname,
         };
-        this.$auth.setUser(user);
-        console.log(this.$auth.user);
+        this.$auth.$storage.setUniversal("user", user, true);
         this.$router.push("/");
       } catch (error) {
         console.log(error);
