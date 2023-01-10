@@ -35,7 +35,7 @@ export default {
     "@nuxtjs/vuetify",
   ],
   axios: {
-    baseURL: "https://pos.zzidzz.tech",
+    baseURL: "http://localhost:8000",
     credentials: true,
   },
   // Modules: https://go.nuxtjs.dev/config-modules

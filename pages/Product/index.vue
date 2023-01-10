@@ -8,33 +8,30 @@
         </v-row>
       </v-container> -->
     <div class="d-flex justify-space-between">
-      <v-btn color="blue">Add</v-btn>
-      <div class="d-flex flex-col" style="width: 30%">
-        <v-text-field
-          :rules="rules"
-          outlined
-          style="font-size: 11pt"
-          dense
-        ></v-text-field>
-        <v-btn class="ml-2" color="blue">Search</v-btn>
-      </div>
+      <v-btn color="blue" @click="createProduct()">Add</v-btn>
+        <v-card-title>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+            outlined
+            dense
+          ></v-text-field>
+        </v-card-title>
     </div>
-    <v-simple-table>
-      <template v-slot:default>
-        <thead>
-          <tr>
-            <th class="text-left">Name</th>
-            <th class="text-left">Calories</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in desserts" :key="item.name">
-            <td>{{ item.name }}</td>
-            <td>{{ item.calories }}</td>
-          </tr>
-        </tbody>
+    <v-data-table
+      :headers="headers"
+      :items="products"
+      :search="search"
+    >
+      <template v-slot:[`item.actions`]="{ item }">
+        <v-icon small class="mr-2" @click="editProduct(item.id)">mdi-pencil</v-icon>
+        <v-icon small @click="deleteProduct(item.id)">mdi-delete</v-icon>
       </template>
-    </v-simple-table>
+    </v-data-table>
+    <p class="mt-3">{{ message }}</p>
   </div>
 </template>
 
@@ -43,58 +40,72 @@ export default {
   layout: "default",
   data() {
     return {
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-        },
+      products: [],
+      message: "",
+      title: "",
+      search: "",
+      headers: [
+        { text: "Product Code", align: "start", sortable: false, value: "product_code", },
+        { text: "Product Name", value: "product_name", sortable: true, },
+        { text: "Uom", value: "uom_name", sortable: false, },
+        { text: "Description", value: "description", sortable: false, },
+        { text: "Stock", value: "stock", sortable: true },
+        { text: "Unit Price", value: "unit_price", sortable: true },
+        { text: "Actions", value: "actions", sortable: false },
       ],
     };
   },
   methods: {
-    getProduct: async function () {
-      const response = await this.$axios.$get("products");
-      console.log(response);
+    deleteProduct(id) {
+      this.$axios.$delete(`products/delete`, {data: {
+        "id": id,
+      }})
+        .then(() => {
+          this.message = "Product deleted succesfully";
+          this.refreshList();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
+    editProduct(id) {
+      this.$router.push(`product/edit/${id}`);
+    },
+    createProduct() {
+      this.$router.push(`product/create`);
+    },
+    getDisplayProduct(product) {
+      return {
+        id: product.id,
+        product_code: product.product_code,
+        product_name: product.product_name.length > 30 ? product.product_name.substr(0, 30) + "..." : product.product_name,
+        uom_name: product.uom_name.length > 30 ? product.uom_name.substr(0, 30) + "..." : product.uom_name,
+        description: product.description.length > 30 ? product.description.substr(0, 30) + "..." : product.description,
+        unit_price: product.unit_price,
+        stock: product.stock,
+      };
+    },
+    retrieveProducts() {
+      this.$axios.$get("products")
+        .then((response) => {
+          this.products = response.data.map(this.getDisplayProduct);
+          console.log(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
+    refreshList(){
+      this.retrieveProducts();
+    }
+    // getProduct: async function () {
+    //   const response = await this.$axios.$get("products");
+    //   console.log(response);
+    // },
   },
   mounted() {
-    this.getProduct();
+    this.retrieveProducts();
+    this.message="";
   },
 };
 </script>
