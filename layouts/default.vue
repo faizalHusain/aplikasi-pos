@@ -31,13 +31,17 @@
       </v-list-item>
       <v-divider></v-divider>
       <v-list>
-        <v-list-item v-for="[icon, text] in links" :key="icon" link>
+        <v-list-item
+          v-for="link in link"
+          :key="link.title"
+          link
+        >
           <v-list-item-icon>
-            <v-icon>{{ icon }}</v-icon>
+            <v-icon>{{ link.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ text }}</v-list-item-title>
+            <v-list-item-title>{{ link.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -47,7 +51,7 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <v-list>
+      <!-- <v-list>
         <v-list-item v-for="[icon, text] in links" :key="icon" link>
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
@@ -57,7 +61,7 @@
             <v-list-item-title>{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-      </v-list>
+      </v-list> -->
 
       <v-btn style="width: 100%">Logout</v-btn>
     </v-navigation-drawer>
@@ -80,11 +84,10 @@ export default {
     cards: ["Today", "Yesterday"],
     drawer: null,
     links: [
-      ["mdi-inbox-arrow-down", "Dashboard"],
-      ["mdi-send", "Sell"],
-      ["mdi-delete", "Buy"],
-      ["mdi-alert-octagon", "Mutasi"],
-    ],
+          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+          { title: 'Photos', icon: 'mdi-image' },
+          { title: 'About', icon: 'mdi-help-box' },
+      ],
   }),
   methods: {
     // async getUser() {
