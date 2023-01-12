@@ -8,17 +8,38 @@
           <p>{{ this.$auth.user.username }}</p>
         </div>
       </v-sheet>
-
-      <v-divider></v-divider>
-
       <v-list>
-        <v-list-item v-for="[icon, text] in links" :key="icon" link>
+        <v-list-item v-for="[icon, text] in dashboardLinks" :key="icon" link>
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <NuxtLink to="{path : text}"
+            <NuxtLink
+              :to="`/${text}`"
+              style="color: white; text-decoration: none"
+              ><v-list-item-title>{{ text }}</v-list-item-title></NuxtLink
+            >
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Transaction</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item v-for="[icon, text] in transactionLinks" :key="icon" link>
+          <v-list-item-icon>
+            <v-icon>{{ icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <NuxtLink
+              :to="`/${text}`"
+              style="color: white; text-decoration: none"
               ><v-list-item-title>{{ text }}</v-list-item-title></NuxtLink
             >
           </v-list-item-content>
@@ -31,17 +52,19 @@
       </v-list-item>
       <v-divider></v-divider>
       <v-list>
-        <v-list-item
-          v-for="link in link"
-          :key="link.title"
-          link
-        >
+        <v-list-item v-for="[icon, text] in masterLinks" :key="icon" link>
           <v-list-item-icon>
-            <v-icon>{{ link.icon }}</v-icon>
+            <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ link.title }}</v-list-item-title>
+            <NuxtLink
+              :to="`/${text}`"
+              style="color: white; text-decoration: none"
+              ><v-list-item-title style="color: white; text-decoration: none">{{
+                text
+              }}</v-list-item-title></NuxtLink
+            >
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -51,17 +74,25 @@
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
-      <!-- <v-list>
-        <v-list-item v-for="[icon, text] in links" :key="icon" link>
+      <v-list>
+        <v-list-item
+          v-for="[icon, text, title] in reportLinks"
+          :key="icon"
+          link
+        >
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>{{ text }}</v-list-item-title>
+            <NuxtLink
+              :to="`/${title}`"
+              style="color: white; text-decoration: none"
+              ><v-list-item-title>{{ text }}</v-list-item-title></NuxtLink
+            >
           </v-list-item-content>
         </v-list-item>
-      </v-list> -->
+      </v-list>
 
       <v-btn style="width: 100%">Logout</v-btn>
     </v-navigation-drawer>
@@ -83,11 +114,23 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     drawer: null,
-    links: [
-          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-          { title: 'Photos', icon: 'mdi-image' },
-          { title: 'About', icon: 'mdi-help-box' },
-      ],
+    dashboardLinks: [["mdi-inbox-arrow-down", "Dashboard"]],
+    transactionLinks: [
+      ["mdi-currency-usd", "Sell"],
+      ["mdi-cart-outline", "Buy"],
+      ["mdi-autorenew", "Adjust"],
+    ],
+    masterLinks: [
+      ["mdi-account-multiple", "Customer"],
+      ["mdi-account-multiple", "Supplier"],
+      ["mdi-alert-octagon", "Uoms"],
+      ["mdi-bag-personal", "Products"],
+    ],
+    reportLinks: [
+      ["mdi-chart-bar", "Sell Report", "SellReport"],
+      ["mdi-chart-bar", "Buy Report", "BuyReport"],
+      ["mdi-chart-bar", "Mutation Report", "MutationReport"],
+    ],
   }),
   methods: {
     // async getUser() {

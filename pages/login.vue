@@ -37,9 +37,9 @@ export default {
   methods: {
     logIn: async function () {
       try {
-        const response = await this.$axios.post("login", {
-          username: this.userLogin.username,
-          password: this.userLogin.password,
+        const response = await this.$auth.loginWith("local", {
+          data: this.userLogin,
+          withCredentials: true,
         });
         console.log(response);
         const user = {
