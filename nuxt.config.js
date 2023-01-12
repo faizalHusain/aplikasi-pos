@@ -35,9 +35,12 @@ export default {
     "@nuxtjs/vuetify",
   ],
   axios: {
-    baseURL: "http://localhost:8000",
+    baseURL: "http://localhost:8000/api",
     credentials: true,
   },
+  // router: {
+  //   middleware: ["auth"],
+  // },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "@nuxtjs/auth-next"],
   auth: {
@@ -60,26 +63,6 @@ export default {
           },
           logout: { url: "/logout", method: "post" },
           user: { url: "/me", method: "get" },
-        },
-      },
-      cookie: {
-        cookie: {
-          // (optional) If set, we check this cookie existence for loggedIn check
-          name: "CSRF-TOKEN",
-        },
-        options: {
-          httpOnly: true,
-        },
-        endpoints: {
-          // (optional) If set, we send a get request to this endpoint before login
-          csrf: {
-            url: "/me",
-            method: "get",
-          },
-          login: {
-            url: "/login",
-            method: "post",
-          },
         },
       },
     },

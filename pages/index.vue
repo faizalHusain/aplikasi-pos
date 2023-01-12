@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     getProduct: async function () {
-      const response = await this.$axios.$get("products", {
+      const response = await this.$axios.$get("products/list", {
         withCredentials: true,
       });
       console.log(response);
