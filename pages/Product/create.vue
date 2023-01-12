@@ -42,6 +42,9 @@
       ></v-text-field>
       </v-form>
 
+      <v-btn color="warning" class="mt-3" :to="{name: 'Product'}">
+        Back to Products
+      </v-btn>
       <v-btn color="primary" class="mt-3" @click="saveProduct">Submit</v-btn>
     </div>
 
@@ -57,6 +60,7 @@
 
         <v-card-actions>
           <v-btn color="success" @click="newProduct">Add</v-btn>
+          <v-btn color="warning" :to="{name: 'Product'}">Back to Products</v-btn>
         </v-card-actions>
       </v-card>
     </div>
