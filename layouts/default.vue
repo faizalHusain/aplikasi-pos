@@ -123,8 +123,8 @@ export default {
     masterLinks: [
       ["mdi-account-multiple", "Customer"],
       ["mdi-account-multiple", "Supplier"],
-      ["mdi-alert-octagon", "Uoms"],
-      ["mdi-bag-personal", "Products"],
+      ["mdi-alert-octagon", "Uom"],
+      ["mdi-bag-personal", "Product"],
     ],
     reportLinks: [
       ["mdi-chart-bar", "Sell Report", "SellReport"],
