@@ -23,15 +23,74 @@
     </div>
     <v-data-table
       :headers="headers"
-      :items="products"
+      :items="products_display"
       :search="search"
     >
       <template v-slot:[`item.actions`]="{ item }">
         <v-icon small class="mr-2" @click="editProduct(item.id)">mdi-pencil</v-icon>
-        <v-icon small @click="deleteProduct(item.id)">mdi-delete</v-icon>
+        <v-icon small class="mr-2" @click="deleteProduct(item.id)">mdi-delete</v-icon>
+        <v-icon
+          small 
+          class="mr-2"
+          @click="infoProduct(item.id)"
+        >
+          mdi-information-outline 
+        </v-icon>
+        
       </template>
+      
     </v-data-table>
     <p class="mt-3">{{ message }}</p>
+    <template>
+        <v-dialog
+        v-model="dialog"
+        transition="dialog-bottom-transition"
+        width="500"
+      >
+        <v-card>
+          <v-card-title class="text-h5 dark lighten-2">
+            {{ product_info.product_name }}
+          </v-card-title>
+          <v-divider class="my-3"></v-divider>
+          <v-card-subtitle class=mt-2>
+            Code
+          </v-card-subtitle>
+          <v-card-text >
+            {{ product_info.product_code }}
+          </v-card-text>
+          <v-card-subtitle class="mt-2">
+            Description
+          </v-card-subtitle>
+          <v-card-text>
+            {{ product_info.description }}
+          </v-card-text>
+          <v-card-subtitle class="mt-2">
+            Stock
+          </v-card-subtitle>
+          <v-card-text>
+            {{ product_info.uom_stock }}
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="warning"
+              text
+              @click="editProduct(product_info.id)"
+            >
+              Edit
+            </v-btn>
+            <v-btn
+              color="primary"
+              text
+              @click="dialog = false"
+            >
+              OK
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </template>
   </div>
 </template>
 
@@ -40,22 +99,46 @@ export default {
   layout: "default",
   data() {
     return {
+      products_display: [],
       products: [],
       message: "",
       title: "",
       search: "",
+      dialog: false,
       headers: [
         { text: "Product Code", align: "start", sortable: false, value: "product_code", },
         { text: "Product Name", value: "product_name", sortable: true, },
-        { text: "Uom", value: "uom_name", sortable: false, },
-        { text: "Description", value: "description", sortable: false, },
         { text: "Stock", value: "stock", sortable: true },
+        { text: "Uom", value: "uom_name", sortable: false, },
         { text: "Unit Price", value: "unit_price", sortable: true },
+        { text: "Description", value: "description", sortable: false, },
         { text: "Actions", value: "actions", sortable: false },
       ],
+      product_info : {
+        product_code: "",
+        product_name: "",
+        uom_stock: "",
+        unit_price: 0,
+        description: ""
+      }
     };
   },
   methods: {
+    infoProduct(id){
+      var product = this.products.filter(obj => {
+        return obj.id === id
+      })[0]
+      this.product_info = {
+        id: product.id,
+        product_code: product.product_code,
+        product_name: product.product_name,
+        uom_stock: `${product.stock} ${product.uom_name}`,
+        unit_price: product.unit_price,
+        description: product.description
+      } 
+      console.log(this.product_info)
+      this.dialog=true;
+    },
     deleteProduct(id) {
       this.$axios.$delete(`products/delete`, {data: {
         "id": id,
@@ -88,7 +171,8 @@ export default {
     retrieveProducts() {
       this.$axios.$get("products")
         .then((response) => {
-          this.products = response.data.map(this.getDisplayProduct);
+          this.products_display = response.data.map(this.getDisplayProduct);
+          this.products = response.data
           console.log(response.data);
         })
         .catch((e) => {
