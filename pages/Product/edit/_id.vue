@@ -1,6 +1,6 @@
 <template>
   <div v-if="currentProduct" class="edit-form py-3">
-    <p class="headline">Edit Buy Order</p>
+    <p class="headline">Edit Product</p>
 
     <v-form ref="form" lazy-validation>
       <v-text-field
@@ -42,6 +42,10 @@
 
       <v-divider class="my-5"></v-divider>
 
+      <v-btn color="warning" small class="mr-2" :to="{name: 'Product'}">
+        Back to Products
+      </v-btn>
+      
       <v-btn color="error" small class="mr-2" @click="deleteProduct">
         Delete
       </v-btn>
