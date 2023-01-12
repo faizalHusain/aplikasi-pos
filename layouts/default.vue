@@ -124,7 +124,7 @@ export default {
       ["mdi-account-multiple", "Customer"],
       ["mdi-account-multiple", "Supplier"],
       ["mdi-alert-octagon", "Uoms"],
-      ["mdi-bag-personal", "Products"],
+      ["mdi-bag-personal", "Product"],
     ],
     reportLinks: [
       ["mdi-chart-bar", "Sell Report", "SellReport"],
