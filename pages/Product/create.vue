@@ -5,44 +5,51 @@
     <div v-if="!submitted">
       <v-form ref="form" lazy-validation>
         <v-text-field
-        v-model="product.product_code"
-        :rules="[(v) => !!v || 'Product Code is Required']"
-        label="Product Code"
-        required
-      ></v-text-field>
+          v-model="product.product_code"
+          :rules="[(v) => !!v || 'Product Code is Required']"
+          label="Product Code"
+          required
+        ></v-text-field>
 
-      <v-text-field
-        v-model="product.product_name"
-        :rules="[(v) => !!v || 'Product Name is Required']"
-        label="Product Name"
-        required
-      ></v-text-field>
+        <v-text-field
+          v-model="product.product_name"
+          :rules="[(v) => !!v || 'Product Name is Required']"
+          label="Product Name"
+          required
+        ></v-text-field>
 
-      <div v-if="currentUomId" class="edit-form py-3" > Uom Id <br>
-        <select v-model="currentUomId" > 
-          <option v-for="(item, index) in uomOptions" :value="item.id" :key="index">{{ item.uom_name }}</option>
-        </select>
-      </div>
-      <div v-else>
-        <p>uom unavailable</p>
-      </div>
-      <v-text-field
-        v-model="product.description"
-        :rules="[(v) => !!v || 'Description is required']"
-        label="Description"
-        required
-      ></v-text-field>
+        <div v-if="currentUomId" class="edit-form py-3">
+          Uom Id <br />
+          <select v-model="currentUomId">
+            <option
+              v-for="(item, index) in uomOptions"
+              :value="item.id"
+              :key="index"
+            >
+              {{ item.uom_name }}
+            </option>
+          </select>
+        </div>
+        <div v-else>
+          <p>uom unavailable</p>
+        </div>
+        <v-text-field
+          v-model="product.description"
+          :rules="[(v) => !!v || 'Description is required']"
+          label="Description"
+          required
+        ></v-text-field>
 
-      <v-text-field
-        v-model="product.unit_price"
-        :rules="[(v) => !!v || 'Unit Price is Required']"
-        label="Unit Price"
-        required
-        type="number"
-      ></v-text-field>
+        <v-text-field
+          v-model="product.unit_price"
+          :rules="[(v) => !!v || 'Unit Price is Required']"
+          label="Unit Price"
+          required
+          type="number"
+        ></v-text-field>
       </v-form>
 
-      <v-btn color="warning" class="mt-3" :to="{name: 'Product'}">
+      <v-btn color="warning" class="mt-3" :to="{ name: 'Product' }">
         Back to Products
       </v-btn>
       <v-btn color="primary" class="mt-3" @click="saveProduct">Submit</v-btn>
@@ -50,9 +57,7 @@
 
     <div v-else>
       <v-card class="mx-auto">
-        <v-card-title>
-          Submitted successfully!
-        </v-card-title>
+        <v-card-title> Submitted successfully! </v-card-title>
 
         <v-card-subtitle>
           Click the button to add new Product.
@@ -60,7 +65,9 @@
 
         <v-card-actions>
           <v-btn color="success" @click="newProduct">Add</v-btn>
-          <v-btn color="warning" :to="{name: 'Product'}">Back to Products</v-btn>
+          <v-btn color="warning" :to="{ name: 'Product' }"
+            >Back to Products</v-btn
+          >
         </v-card-actions>
       </v-card>
     </div>
@@ -68,12 +75,11 @@
 </template>
 
 <script>
-
 export default {
   name: "add-product",
   data() {
     return {
-      product:{
+      product: {
         product_code: "",
         product_name: "",
         uom_id: "",
@@ -90,14 +96,18 @@ export default {
       return {
         id: uom.id,
         uom_code: uom.uom_code,
-        uom_name: uom.uom_name.length > 30 ? uom.uom_name.substr(0, 30) + "..." : uom.uom_name,
+        uom_name:
+          uom.uom_name.length > 30
+            ? uom.uom_name.substr(0, 30) + "..."
+            : uom.uom_name,
       };
     },
-    getUomOptions(){
-      this.$axios.$get(`uoms`)
+    getUomOptions() {
+      this.$axios
+        .$get(`uoms/list`)
         .then((response) => {
           this.uomOptions = response.data.map(this.getDisplayUom);
-          this.currentUomId = this.uomOptions[0].id
+          this.currentUomId = this.uomOptions[0].id;
           console.log("mantap");
           console.log(this.uomOptions);
         })
@@ -112,10 +122,11 @@ export default {
         uom_id: this.currentUomId,
         description: this.product.description,
         unit_price: this.product.unit_price,
-        thumbnail: ""
+        thumbnail: "",
       };
 
-      this.$axios.$post(`products/create`, data)
+      this.$axios
+        .$post(`products/create`, data)
         .then((response) => {
           this.product.id = response.data.id;
           console.log("deeznuts");

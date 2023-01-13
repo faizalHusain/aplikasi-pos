@@ -8,7 +8,7 @@
         </v-row>
       </v-container> -->
     <div class="d-flex justify-space-between">
-      <v-btn color="blue" @click="createUom()">Add</v-btn>
+      <v-btn color="blue" @click="createSell()">Add</v-btn>
       <v-card-title>
         <v-text-field
           v-model="search"
@@ -21,15 +21,15 @@
         ></v-text-field>
       </v-card-title>
     </div>
-    <v-data-table :headers="headers" :items="uoms_display" :search="search">
+    <v-data-table :headers="headers" :items="sells_display" :search="search">
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon small class="mr-2" @click="editUom(item.id)">mdi-pencil</v-icon>
-        <v-icon small class="mr-2" @click="deleteUom(item.id)"
+        <!-- <v-icon small class="mr-2" @click="editSell(item.id)">mdi-pencil</v-icon>
+        <v-icon small class="mr-2" @click="deleteSell(item.id)"
           >mdi-delete</v-icon
-        >
-        <v-icon small class="mr-2" @click="infoUom(item.id)">
+        > -->
+        <!-- <v-icon small class="mr-2" @click="infoSell(item.id)">
           mdi-information-outline
-        </v-icon>
+        </v-icon> -->
       </template>
     </v-data-table>
     <p class="mt-3">{{ message }}</p>
@@ -67,21 +67,21 @@ export default {
   layout: "default",
   data() {
     return {
-      uoms_display: [],
-      uoms: [],
+      sells_display: [],
+      sells: [],
       message: "",
       title: "",
       search: "",
       dialog: false,
       headers: [
         {
-          text: "Uom Code",
+          text: "Name",
           align: "start",
           sortable: false,
-          value: "uom_code",
+          value: "name",
         },
-        { text: "Uom Name", value: "uom_name", sortable: true },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "Total Cost", value: "total_cost", sortable: true },
+        { text: "Transaction Date", value: "created_at", sortable: false },
       ],
       uom_info: {
         uom_code: "",
@@ -120,25 +120,26 @@ export default {
     editUom(id) {
       this.$router.push(`uom/edit/${id}`);
     },
-    createUom() {
-      this.$router.push(`uom/create`);
+    createSell() {
+      this.$router.push(`buy/create`);
     },
-    getDisplayUom(uom) {
+    getDisplayUom(sells) {
       return {
-        id: uom.id,
-        uom_code: uom.uom_code,
-        uom_name:
-          uom.uom_name.length > 30
-            ? uom.uom_name.substr(0, 30) + "..."
-            : uom.uom_name,
+        id: sells.id,
+        name:
+          sells.name.length > 30
+            ? sells.name.substr(0, 30) + "..."
+            : sells.name,
+        total_cost: sells.total_cost,
+        created_at: sells.created_at,
       };
     },
     retrieveUoms() {
       this.$axios
-        .$get("uoms/list")
+        .$get("buy_orders/list")
         .then((response) => {
-          this.uoms_display = response.data.map(this.getDisplayUom);
-          this.uoms = response.data;
+          this.sells_display = response.data.map(this.getDisplayUom);
+          this.sells = response.data;
           console.log(response.data);
         })
         .catch((e) => {

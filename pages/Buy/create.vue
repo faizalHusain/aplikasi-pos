@@ -175,7 +175,7 @@ export default {
       this.orders.push(order);
     },
     getCustomer: async function () {
-      const response = await this.$axios.$get("customers/list");
+      const response = await this.$axios.$get("suppliers/list");
       console.log(response.data);
       this.customers = response.data;
     },
@@ -209,14 +209,14 @@ export default {
     },
     createSellOrders: async function () {
       try {
-        const sellOrderRes = await this.$axios.$post("/sell_orders/create", {
-          customer_id: this.customer.id,
+        const sellOrderRes = await this.$axios.$post("/buy_orders/create", {
+          supplier_id: this.customer.id,
         });
         console.log(sellOrderRes.data);
         this.orders.forEach((order) => {
           order.order_id = sellOrderRes.data.id;
           this.$axios
-            .$post("/sells/create", order)
+            .$post("/buys/create", order)
             .then((res) => {
               console.log(res);
             })
