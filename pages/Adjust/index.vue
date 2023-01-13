@@ -127,7 +127,7 @@ export default {
       return {
         id: sells.id,
         name:
-          sells.name.length > 30
+          sells.fullname.length > 30
             ? sells.name.substr(0, 30) + "..."
             : sells.name,
         total_cost: sells.total_cost,
@@ -136,7 +136,7 @@ export default {
     },
     retrieveUoms() {
       this.$axios
-        .$get("sell_orders/list")
+        .$get("adjustment_orders/list")
         .then((response) => {
           this.sells_display = response.data.map(this.getDisplayUom);
           this.sells = response.data;

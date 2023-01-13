@@ -123,7 +123,7 @@ export default {
     createSell() {
       this.$router.push(`sell/create`);
     },
-    getDisplayUom(sells) {
+    getDisplaySell(sells) {
       return {
         id: sells.id,
         name:
@@ -131,14 +131,14 @@ export default {
             ? sells.name.substr(0, 30) + "..."
             : sells.name,
         total_cost: sells.total_cost,
-        created_at: sells.created_at,
+        created_at: sells.created_at.split(" ")[0],
       };
     },
-    retrieveUoms() {
+    retrieveSells() {
       this.$axios
         .$get("sell_orders/list")
         .then((response) => {
-          this.sells_display = response.data.map(this.getDisplayUom);
+          this.sells_display = response.data.map(this.getDisplaySell);
           this.sells = response.data;
           console.log(response.data);
         })
@@ -147,7 +147,7 @@ export default {
         });
     },
     refreshList() {
-      this.retrieveUoms();
+      this.retrieveSells();
     },
     // getUom: async function () {
     //   const response = await this.$axios.$get("uoms");
@@ -155,7 +155,7 @@ export default {
     // },
   },
   mounted() {
-    this.retrieveUoms();
+    this.retrieveSells();
     this.message = "";
   },
 };

@@ -96,7 +96,7 @@
               dense
               filled
               outlined
-              label="Customer"
+              label="Supplier"
               class="mb-0"
               item-text="name"
               required

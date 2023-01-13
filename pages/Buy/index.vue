@@ -8,7 +8,7 @@
         </v-row>
       </v-container> -->
     <div class="d-flex justify-space-between">
-      <v-btn color="blue" @click="createSell()">Add</v-btn>
+      <v-btn color="blue" @click="createBuy()">Add</v-btn>
       <v-card-title>
         <v-text-field
           v-model="search"
@@ -21,7 +21,7 @@
         ></v-text-field>
       </v-card-title>
     </div>
-    <v-data-table :headers="headers" :items="sells_display" :search="search">
+    <v-data-table :headers="headers" :items="buys_display" :search="search">
       <template v-slot:[`item.actions`]="{ item }">
         <!-- <v-icon small class="mr-2" @click="editSell(item.id)">mdi-pencil</v-icon>
         <v-icon small class="mr-2" @click="deleteSell(item.id)"
@@ -67,8 +67,8 @@ export default {
   layout: "default",
   data() {
     return {
-      sells_display: [],
-      sells: [],
+      buys_display: [],
+      buys: [],
       message: "",
       title: "",
       search: "",
@@ -120,26 +120,25 @@ export default {
     editUom(id) {
       this.$router.push(`uom/edit/${id}`);
     },
-    createSell() {
+    createBuy() {
       this.$router.push(`buy/create`);
     },
-    getDisplayUom(sells) {
+    getDisplayBuy(buys) {
       return {
-        id: sells.id,
+        id: buys.id,
         name:
-          sells.name.length > 30
-            ? sells.name.substr(0, 30) + "..."
-            : sells.name,
-        total_cost: sells.total_cost,
-        created_at: sells.created_at,
+          buys.name.length > 30 ? buys.name.substr(0, 30) + "..." : buys.name,
+        total_cost: buys.total_cost,
+        created_at: buys.created_at.split(" ")[0],
       };
     },
-    retrieveUoms() {
+    retrieveBuy() {
       this.$axios
         .$get("buy_orders/list")
         .then((response) => {
-          this.sells_display = response.data.map(this.getDisplayUom);
-          this.sells = response.data;
+          console.log(response.data);
+          this.buys_display = response.data.map(this.getDisplayBuy);
+          this.buys = response.data;
           console.log(response.data);
         })
         .catch((e) => {
@@ -147,7 +146,7 @@ export default {
         });
     },
     refreshList() {
-      this.retrieveUoms();
+      this.retrieveBuy();
     },
     // getUom: async function () {
     //   const response = await this.$axios.$get("uoms");
@@ -155,7 +154,7 @@ export default {
     // },
   },
   mounted() {
-    this.retrieveUoms();
+    this.retrieveBuy();
     this.message = "";
   },
 };
