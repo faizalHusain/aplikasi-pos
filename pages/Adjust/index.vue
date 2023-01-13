@@ -78,9 +78,9 @@ export default {
           text: "Name",
           align: "start",
           sortable: false,
-          value: "name",
+          value: "fullname",
         },
-        { text: "Total Cost", value: "total_cost", sortable: true },
+        // { text: "Total Cost", value: "adjust", sortable: true },
         { text: "Transaction Date", value: "created_at", sortable: false },
       ],
       uom_info: {
@@ -121,15 +121,15 @@ export default {
       this.$router.push(`uom/edit/${id}`);
     },
     createSell() {
-      this.$router.push(`sell/create`);
+      this.$router.push(`adjust/create`);
     },
     getDisplayUom(sells) {
       return {
         id: sells.id,
-        name:
+        fullname:
           sells.fullname.length > 30
-            ? sells.name.substr(0, 30) + "..."
-            : sells.name,
+            ? sells.fullname.substr(0, 30) + "..."
+            : sells.fullname,
         total_cost: sells.total_cost,
         created_at: sells.created_at,
       };

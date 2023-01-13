@@ -43,6 +43,7 @@ export default {
         });
         console.log(response);
         const user = {
+          id: response.data.user.id,
           username: response.data.user.username,
           fullname: response.data.user.fullname,
         };

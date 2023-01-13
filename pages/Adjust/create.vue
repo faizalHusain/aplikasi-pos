@@ -36,9 +36,9 @@
                     ></v-autocomplete>
                     <v-text-field
                       outlined
-                      label="quantity"
+                      label="real stock"
                       dense
-                      v-model="quantity"
+                      v-model="real_stock"
                     >
                     </v-text-field>
                   </div>
@@ -55,8 +55,8 @@
                 <thead>
                   <tr>
                     <th class="text-left">Produk</th>
-                    <th class="text-left">Price</th>
-                    <th class="text-left">Quantity</th>
+                    <th class="text-left">Recorded Stock</th>
+                    <th class="text-left">Real Stock</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -67,13 +67,13 @@
                   >
                     <td>{{ item.product_name }}</td>
                     <td>
-                      {{ item.unit_price }}
+                      {{ item.stock }}
                     </td>
                     <td>
                       <v-icon @click="decQty(item.product_id)"
                         >mdi-minus-circle</v-icon
                       >
-                      {{ item.quantity }}
+                      {{ item.real_stock }}
                       <!-- {{ item.quantity }} -->
                       <v-icon @click="incQty(item.product_id)"
                         >mdi-plus-circle</v-icon
@@ -90,33 +90,30 @@
         </v-col>
         <v-col cols="12" sm="4">
           <v-card v-if="renderComponent" class="pa-2 mx-2" height="80vh">
-            <v-autocomplete
-              v-model="customer"
-              :items="customers"
+            <v-text-field
+              v-model="admin.fullname"
               dense
               filled
               outlined
-              label="Customer"
+              disabled
+              label="Admin"
               class="mb-0"
-              item-text="name"
-              required
-              return-object
-            ></v-autocomplete>
+            ></v-text-field>
 
             <v-simple-table class="mt-0">
               <template v-slot:default>
                 <thead>
                   <tr>
                     <th class="text-left">Produk</th>
-                    <th class="text-left">Quantity</th>
-                    <th class="text-left">Total</th>
+                    <th class="text-left">Recorded Stock</th>
+                    <th class="text-left">Real Stock</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="item in orders" :key="item.product_id">
                     <td>{{ item.product_name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.unit_price * item.quantity }}</td>
+                    <td>{{ item.stock }}</td>
+                    <td>{{ item.real_stock }}</td>
                   </tr>
                 </tbody>
               </template>
@@ -127,11 +124,8 @@
                 <v-btn color="red" style="width: 95%; margin-bottom: 5px"
                   >Cancel</v-btn
                 >
-                <v-btn
-                  @click="createSellOrders"
-                  color="blue"
-                  style="width: 95%"
-                  >{{ sum(orders) }}</v-btn
+                <v-btn @click="createSellOrders" color="blue" style="width: 95%"
+                  >Sesuaikan Stok</v-btn
                 >
               </div>
             </v-card-actions>
@@ -148,9 +142,10 @@ export default {
   data() {
     return {
       renderComponent: true,
+      admin: JSON.parse(this.$auth.$storage.getCookies()["auth.user"]),
       dialog: false,
       product: {},
-      quantity: "",
+      real_stock: "",
       orders: [],
       products: [],
       customers: [],
@@ -168,9 +163,9 @@ export default {
       console.log(this.product);
       const order = {
         product_id: this.product.id,
-        unit_price: this.product.unit_price,
+        stock: this.product.stock,
         product_name: this.product.product_name,
-        quantity: parseInt(this.quantity),
+        real_stock: parseInt(this.real_stock),
       };
       this.orders.push(order);
     },
@@ -183,7 +178,8 @@ export default {
       const index = this.orders.findIndex((obj) => obj.product_id == id);
       // Vue.set(orders, [index].quantity, [index].quantity - 1);
       // this.$set(this.orders,[index].quantity, 6);
-      this.orders[index].quantity = parseInt(this.orders[index].quantity) + 1;
+      this.orders[index].real_stock =
+        parseInt(this.orders[index].real_stock) + 1;
       this.renderComponent = false;
 
       await this.$nextTick();
@@ -195,7 +191,8 @@ export default {
       // Vue.set(orders, [index].quantity, [index].quantity - 1);
       // this.$set(this.orders,[index].quantity, 6);
       this.renderComponent = false;
-      this.orders[index].quantity = parseInt(this.orders[index].quantity) - 1;
+      this.orders[index].real_stock =
+        parseInt(this.orders[index].real_stock) - 1;
       await this.$nextTick();
       this.renderComponent = true;
       console.log(this.orders);
@@ -209,14 +206,17 @@ export default {
     },
     createSellOrders: async function () {
       try {
-        const sellOrderRes = await this.$axios.$post("/sell_orders/create", {
-          customer_id: this.customer.id,
-        });
+        const sellOrderRes = await this.$axios.$post(
+          "/adjustment_orders/create",
+          {
+            admin_id: this.admin.id,
+          }
+        );
         console.log(sellOrderRes.data);
         this.orders.forEach((order) => {
           order.order_id = sellOrderRes.data.id;
           this.$axios
-            .$post("/sells/create", order)
+            .$post("/stock_adjustments/create", order)
             .then((res) => {
               console.log(res);
             })
@@ -224,7 +224,7 @@ export default {
               console.log(e);
             });
         });
-        this.$router.push("/sell");
+        this.$router.push("/adjust");
       } catch (error) {}
     },
   },

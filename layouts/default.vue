@@ -9,17 +9,24 @@
         </div>
       </v-sheet>
       <v-list>
-        <v-list-item v-for="[icon, text] in dashboardLinks" :key="icon" link>
+        <v-list-item
+          v-for="[icon, text, link] in dashboardLinks"
+          :key="icon"
+          link
+          nuxt
+          :to="`/${link}`"
+        >
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <NuxtLink
+            <!-- <NuxtLink
               :to="`/${text}`"
               style="color: white; text-decoration: none"
-              ><v-list-item-title>{{ text }}</v-list-item-title></NuxtLink
-            >
+              ></NuxtLink
+            > -->
+            <v-list-item-title>{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -31,17 +38,19 @@
       </v-list-item>
       <v-divider></v-divider>
       <v-list>
-        <v-list-item v-for="[icon, text] in transactionLinks" :key="icon" link>
+        <v-list-item
+          v-for="[icon, text] in transactionLinks"
+          :key="icon"
+          link
+          nuxt
+          :to="`/${text}`"
+        >
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <NuxtLink
-              :to="`/${text}`"
-              style="color: white; text-decoration: none"
-              ><v-list-item-title>{{ text }}</v-list-item-title></NuxtLink
-            >
+            <v-list-item-title>{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -52,19 +61,21 @@
       </v-list-item>
       <v-divider></v-divider>
       <v-list>
-        <v-list-item v-for="[icon, text] in masterLinks" :key="icon" link>
+        <v-list-item
+          v-for="[icon, text] in masterLinks"
+          :key="text"
+          link
+          nuxt
+          :to="`/${text}`"
+        >
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <NuxtLink
-              :to="`/${text}`"
-              style="color: white; text-decoration: none"
-              ><v-list-item-title style="color: white; text-decoration: none">{{
-                text
-              }}</v-list-item-title></NuxtLink
-            >
+            <v-list-item-title style="color: white; text-decoration: none">{{
+              text
+            }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -77,19 +88,17 @@
       <v-list>
         <v-list-item
           v-for="[icon, text, title] in reportLinks"
-          :key="icon"
+          :key="title"
           link
+          nuxt
+          :to="`/${title}`"
         >
           <v-list-item-icon>
             <v-icon>{{ icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
-            <NuxtLink
-              :to="`/${title}`"
-              style="color: white; text-decoration: none"
-              ><v-list-item-title>{{ text }}</v-list-item-title></NuxtLink
-            >
+            <v-list-item-title>{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -114,7 +123,7 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     drawer: null,
-    dashboardLinks: [["mdi-inbox-arrow-down", "Dashboard"]],
+    dashboardLinks: [["mdi-inbox-arrow-down", "Dashboard", ""]],
     transactionLinks: [
       ["mdi-currency-usd", "Sell"],
       ["mdi-cart-outline", "Buy"],
