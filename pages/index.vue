@@ -2,8 +2,21 @@
   <div>
     <v-container>
       <v-row no-gutters>
-        <v-col v-for="n in 3" :key="n" cols="12" sm="4">
-          <v-card class="pa-2 mx-2"> One of three columns </v-card>
+        <v-col
+          v-for="[icon, title, value] in dashboards"
+          :key="icon"
+          cols="12"
+          sm="6"
+        >
+          <v-card class="py-5 mx-2" style="height: 200px">
+            <div class="d-flex align-center">
+              <v-icon size="150px">{{ icon }}</v-icon>
+              <div class="d-flex flex-column">
+                <h3>{{ title }}</h3>
+                <h1 style="font-size: 50pt">{{ value }}</h1>
+              </div>
+            </div>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -15,55 +28,19 @@ export default {
   layout: "default",
   data() {
     return {
-      desserts: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-        },
-        {
-          name: "Ice cream sandwich",
-          calories: 237,
-        },
-        {
-          name: "Eclair",
-          calories: 262,
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-        },
-        {
-          name: "Donut",
-          calories: 452,
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-        },
+      dashboards: [
+        ["mdi-account-multiple", "Total Customer"],
+        ["mdi-currency-usd", "Total Omset"],
       ],
     };
   },
   methods: {
     getProduct: async function () {
-      const response = await this.$axios.$get("products/list", {
+      const response = await this.$axios.$get("dashboard", {
         withCredentials: true,
       });
+      this.dashboards[0].push(response.data.total_customer);
+      this.dashboards[1].push(response.data.total_omset);
       console.log(response);
     },
   },

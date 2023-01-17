@@ -103,7 +103,7 @@
         </v-list-item>
       </v-list>
 
-      <v-btn style="width: 100%">Logout</v-btn>
+      <v-btn style="width: 100%" @click="logout">Logout</v-btn>
     </v-navigation-drawer>
     <v-app-bar app>
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
@@ -142,13 +142,10 @@ export default {
     ],
   }),
   methods: {
-    // async getUser() {
-    //   try {
-    //     response = await this.$axios.$get("/me", { withCredentials: true });
-    //     console.log(response);
-    //     this.user = response.data;
-    //   } catch (error) {}
-    // },
+    logout: async function () {
+      await this.$auth.logout();
+      this.$router.push("/login");
+    },
   },
   mounted() {
     // this.getUser();

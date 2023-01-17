@@ -27,9 +27,9 @@
         <v-icon small class="mr-2" @click="deleteSell(item.id)"
           >mdi-delete</v-icon
         > -->
-        <!-- <v-icon small class="mr-2" @click="infoSell(item.id)">
+        <v-icon small class="mr-2" @click="infoSell(item.id)">
           mdi-information-outline
-        </v-icon> -->
+        </v-icon>
       </template>
     </v-data-table>
     <p class="mt-3">{{ message }}</p>
@@ -40,22 +40,30 @@
         width="500"
       >
         <v-card>
-          <v-card-title class="text-h5 dark lighten-2">
-            {{ uom_info.uom_name }}
-          </v-card-title>
-          <v-divider class="my-3"></v-divider>
-          <v-card-subtitle class="mt-2"> Code </v-card-subtitle>
+          <v-card-title> Details </v-card-title>
           <v-card-text>
-            {{ uom_info.uom_code }}
+            <v-simple-table class="mt-0">
+              <template v-slot:default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Produk</th>
+                    <th class="text-left">Recorded Stock</th>
+                    <th class="text-left">Real Stock</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in sells_item" :key="item.id">
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.recorded_stock }}</td>
+                    <td>{{ item.real_stock }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
           </v-card-text>
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="warning" text @click="editUom(uom_info.id)">
-              Edit
-            </v-btn>
-            <v-btn color="primary" text @click="dialog = false"> OK </v-btn>
-          </v-card-actions>
+          <!-- <v-data-table :headers="headers" :items="sells_item" :search="search">
+            <template v-slot:[`item.actions`]="{ item }"> </template>
+          </v-data-table> -->
         </v-card>
       </v-dialog>
     </template>
@@ -69,6 +77,7 @@ export default {
     return {
       sells_display: [],
       sells: [],
+      sells_item: [],
       message: "",
       title: "",
       search: "",
@@ -82,6 +91,7 @@ export default {
         },
         // { text: "Total Cost", value: "adjust", sortable: true },
         { text: "Transaction Date", value: "created_at", sortable: false },
+        { text: "Actions", value: "actions", sortable: false },
       ],
       uom_info: {
         uom_code: "",
@@ -90,16 +100,12 @@ export default {
     };
   },
   methods: {
-    infoUom(id) {
-      var uom = this.uoms.filter((obj) => {
-        return obj.id === id;
-      })[0];
-      this.uom_info = {
-        id: uom.id,
-        uom_code: uom.uom_code,
-        uom_name: uom.uom_name,
-      };
-      console.log(this.uom_info);
+    async infoSell(id) {
+      const response = await this.$axios.get(
+        `/stock_adjustments/list?order_id=${id}`
+      );
+      this.sells_item = response.data.data;
+      console.log(response.data.data);
       this.dialog = true;
     },
     deleteUom(id) {

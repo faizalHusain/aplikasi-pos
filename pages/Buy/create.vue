@@ -224,7 +224,7 @@ export default {
               console.log(e);
             });
         });
-        this.$router.push("/adjust");
+        this.$router.push("/buy");
       } catch (error) {}
     },
   },
